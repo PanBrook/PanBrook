@@ -1,0 +1,373 @@
+FOC~BUILDING~LIST
+
+BuildingAlchemistShop:
+  A laboratory for an alchemist to work their magic.
+  Unlocks buying an infinite number of many kinds of potions that you have ever acquired in the game,
+  but at an incredibly steep markup.
+  
+BuildingAltarOfDarkness:
+ Unlocks targeted corruptions on the tails, wings, and dicks of slaves.
+
+:: BuildingAnalFuckhole [nobr] {"position":"475,2725","size":"100,100"}
+<p>
+Unlocks the Anal Fuckhole slave duty, which increases the income
+made by your Sex Pimp
+based on the anal skill of the slave.
+</p>
+
+
+:: BuildingAnalTrainingRoom [nobr] {"position":"975,3725","size":"100,100"}
+<p>
+Unlocks Anal Training: Master for slaves.
+
+</p>
+
+:: BuildingAntiqueShop [nobr] {"position":"1100,975","size":"100,100"}
+<p>
+A small shop selling various antiquities within your fort.
+Many fragile-looking valuables are stored within, and you best
+keep your most brutish slavers from wandering in.
+When placed at your fort, will increase
+<<rep setup.skill.intrigue>> in exchange for <<rep setup.skill.brawn>>.
+</p>
+
+
+:: BuildingAnuslab [nobr] {"position":"1100,475","size":"100,100"}
+<p>
+Unlocks tightening and loosening of slave's anus.
+
+</p>
+
+
+:: BuildingArmory [nobr] {"position":"850,3475","size":"100,100"}
+<p>
+Where you store are all your spare equipment, and allows you to manage them more efficiently.
+Unlocks the management of equipment sets.
+Initially, there are only enough space for a few equipment sets, but this can be
+expanded by
+upgrading the armory.
+Each upgrade adds
+<<= setup.EQUIPMENTSET_PER_STORAGE>>
+extra spaces for equipment sets.
+</p>
+
+
+:: BuildingBallslab [nobr] {"position":"100,600","size":"100,100"}
+<p>
+Unlocks limited growing and shrinking of slave balls.
+
+</p>
+
+
+:: BuildingBath [nobr] {"position":"725,2725","size":"100,100"}
+<p>
+Unlocks the Toilet slave duty, which increases the income
+made by your Entertainment Pimp
+based on the toilet skill of the slave.
+</p>
+
+
+:: BuildingBazaar [nobr] {"position":"1225,3475","size":"100,100"}
+<p>
+A designated square just outside your fort where you occasionally auctions trinkets and
+treasures from your raids to the public.
+Unlocks selling items and spare equipment from their corresponding menus.
+
+</p>
+
+:: BedchamberRename [nobr] {"position":"975,23475","size":"100,100"}
+<<set $gMenuVisible = false>>
+
+<<set _bedchamberx = $bedchamber[$gBedchamber_key]>>
+
+Change <<rep _bedchamberx>>'s name to:
+<<textbox "_bedchamberx.name" _bedchamberx.getName()>>.
+
+<br/>
+<<focreturn 'Done'>>
+
+:: BuildingBedchamberWing [nobr] {"position":"850,350","size":"100,100"}
+<p>
+Transforms a small wing of your fort into a luxurious area for you and your
+slavers to revel in your success.
+Unlocks private bedchambers, in which you can give ownership of some slaves to yourself
+or your slavers.
+Very, very slightly increases the slaver's skills, but the main reason this improvement exists
+is to roleplay.
+</p>
+
+<p>
+Each upgrade unlocks one extra bedchamber.
+</p>
+
+<p>
+You can assign slaves to bedchambers via the "Duty" menu.
+</p>
+
+:: BuildingBiolab [nobr] {"position":"350,600","size":"100,100"}
+<p>
+Unlocks limited muscle and height growing and shrinking on slaves.
+Can build further improvements to unlock more flesh shaping options.
+
+</p>
+
+
+:: BuildingBlessingRoom [nobr] {"position":"725,2600","size":"100,100"}
+<p>
+Unlocks targeted purification on the eyes, mouth, or ears of slaves and slavers.
+
+</p>
+
+
+:: BuildingBondageRoom [nobr] {"position":"225,1100","size":"100,100"}
+<p>
+A room filled to the brim with bondage tools, for your more adventurous slavers.
+When placed at your fort, will increase
+<<rep setup.skill.slaving>> in exchange for <<rep setup.skill.aid>>.
+</p>
+
+
+:: BuildingBooths [nobr] {"position":"225,3600","size":"100,100"}
+<p>
+Several booths placed strategically around your market to attract outside vendors.
+Unlocks contacts that can sell items and furniture for your fort.
+You can use the furniture once you build the <<rep setup.buildingtemplate.bedchamberwing>>.
+</p>
+
+
+:: BuildingBrainwashingRoom [nobr] {"position":"1225,3725","size":"100,100"}
+<p>
+Where you can practice your brainwash-assisted manipulation techniques to convert
+a slave into a slaver without side-effects.
+Unlocks a training that can convert a slave into a slaver with no side effect other than
+losing all their slave trainings.
+</p>
+
+
+:: BuildingBreastlab [nobr] {"position":"600,600","size":"100,100"}
+<p>
+Unlocks limited growing and shrinking of slave breasts.
+
+</p>
+
+:: BuildingClassroom [nobr] {"position":"850,1975","size":"100,100"}
+<p>
+A room to store... manuals. "That" kind of manuals, for you and your slavers
+to learn new bedroom techniques.
+Unlocks viewing sex actions units can take during sex, as well as disabling some of them during sex.
+Also unlocks the <<rep setup.sexpose.allfours>> pose during sex.
+</p>
+
+
+:: BuildingCleaning [nobr] {"position":"975,2725","size":"100,100"}
+<p>
+Unlocks the Maid slave duty, which increases the income
+made by your Service Pimp
+based on the domestic skill of the slave.
+</p>
+
+
+:: BuildingCommonRoom [nobr] {"position":"600,1100","size":"100,100"}
+<p>
+A small room for your slavers to relax and enjoy themselves.
+When placed at your fort, will increase
+<<rep setup.skill.combat>> in exchange for <<rep setup.skill.arcane>>.
+</p>
+
+
+:: BuildingConstructionOffice [nobr] {"position":"975,2225","size":"100,100"}
+<p>
+An essential part of every fort,
+this small wooden office houses all the current and future blueprints
+of all the improvements in your fort.
+You can make further upgrades to your fort by entering this office.
+
+</p>
+
+
+:: BuildingConvincingRoom [nobr] {"position":"225,3850","size":"100,100"}
+<p>
+Where you can practice your best manipulation techniques to convince a slave to do terrible things.
+Unlocks a training that can convert a completely untrained slave into a
+slaver, although it will cost you quite a bit of money. The slaver will
+also be traumatized for a good while, but there is no long-term damage.
+</p>
+
+:: BuildingCourtyard [nobr] {"position":"1225,2725","size":"100,100"}
+<p>
+Unlocks the Furniture slave duty, which increases the income
+made by your Service Pimp
+based on the endurance skill of the slave.
+</p>
+
+
+:: BuildingDamageControlOffice [nobr] {"position":"1225,2225","size":"100,100"}
+<p>
+Unlocks the Damage Control Officer duty, which can decrease ire
+with the other forces, in exchange for some money.
+</p>
+
+
+:: BuildingDeepAltarOfDarkness [nobr] {"position":"600,850","size":"100,100"}
+<p>
+Unlocks targeted corruptions on the tails, wings, and dicks of slavers.
+
+</p>
+
+
+:: BuildingDeepMirrorOfTheDamned [nobr] {"position":"850,850","size":"100,100"}
+<p>
+Unlocks targeted corruptions on the body, arms, and legs of slavers.
+
+</p>
+
+
+:: BuildingDeepPoolOfMist [nobr] {"position":"1100,850","size":"100,100"}
+<p>
+Unlocks targeted corruptions on the eyes, ears, and mouths of slavers.
+
+</p>
+
+
+:: BuildingDeepRitualChamber [nobr] {"position":"100,975","size":"100,100"}
+<p>
+A damned place to communicate beyond <<lore concept_mist>>, in particular with the demon prince you have
+somehow successfully bargained with.
+Unlocks corruption on slavers.
+Corruption requires slaves to be sent beyond <<lore concept_mist>> as payment.
+Can build further improvements to unlock more targeted corruptions.
+
+</p>
+
+
+:: BuildingDicklab [nobr] {"position":"850,600","size":"100,100"}
+<p>
+Unlocks limited growing and shrinking of slave dicks.
+
+</p>
+
+
+:: BuildingDiningRoom [nobr] {"position":"975,1100","size":"100,100"}
+<p>
+A room where your slavers can gather and enjoy a meal together, like a family.
+When placed at your fort, will increase
+<<rep setup.skill.knowledge>> in exchange for <<rep setup.skill.sex>>.
+</p>
+
+
+:: BuildingDoctorOffice [nobr] {"position":"1100,1350","size":"100,100"}
+<p>
+Unlocks the doctor duty, which speeds up injury recovery.
+
+</p>
+
+
+:: BuildingDomesticTrainingRoom [nobr] {"position":"475,3850","size":"100,100"}
+<p>
+Unlocks Domestic Training: Master for slaves.
+
+</p>
+
+
+:: BuildingDominanceTrainingRoom [nobr] {"position":"725,3850","size":"100,100"}
+<p>
+Unlocks Dominance Training: Master for slaves.
+
+</p>
+
+
+:: BuildingDungeons [nobr] {"position":"1225,350","size":"100,100"}
+<p>
+A dark complex where you can keep your slaves.
+While initially limited in size, you can build more cells to keep more slaves.
+Each upgrade adds
+<<= setup.FORT_SLAVE_CAPACITY_PER_CELL>>
+extra space for keeping slaves.
+</p>
+
+<p>
+Also unlocks having arbitrary sex with your slavers and slaves, although your options
+will be quite limited at the start of your career...
+</p>
+
+:: BuildingDutyRoom [nobr] {"position":"225,2350","size":"100,100"}
+<p>
+A small room to assign weekly duties to your slavers.
+Unlocks assigning slavers to duties.
+Also unlocks the Leader duty, which is a duty exclusive for yourself that may grant you
+some money each when you are not busy.
+</p>
+
+
+:: BuildingEnduranceTrainingRoom [nobr] {"position":"975,3850","size":"100,100"}
+<p>
+Unlocks Endurance Training: Master for slaves.
+
+</p>
+
+
+:: BuildingFarm [nobr] {"position":"100,1225","size":"100,100"}
+<p>
+A lush and well-planted patch of land, ensuring your fort has some access to food
+in emergencies.
+When placed at your fort, will increase
+<<rep setup.skill.survival>> in exchange for <<rep setup.skill.social>>.
+</p>
+
+
+:: BuildingFetishTrainingRoom [nobr] {"position":"1225,3850","size":"100,100"}
+<p>
+Room containing several specialized tools to train slaves for particularly...
+uncommon tastes.
+Unlocks basic and advanced training for: toilet training, sissy training, and roleplay training.
+</p>
+
+
+:: BuildingForge [nobr] {"position":"475,3600","size":"100,100"}
+<p>
+An area with anvil and source of flame where blacksmiths and tailor can practice their craft.
+Unlocks buying non-sexual related equipments.
+Can build improvements which attracts vendors that makes more goods available to purchase.
+</p>
+
+
+:: BuildingGallery [nobr] {"position":"475,1225","size":"100,100"}
+<p>
+A small clearing decorated with statues and sculptures of many kind.
+Some of them are depicts their actors in rather compromising positions.
+When placed at your fort, will increase
+<<rep setup.skill.sex>> in exchange for <<rep setup.skill.knowledge>>.
+</p>
+
+
+:: BuildingGarden [nobr] {"position":"850,1225","size":"100,100"}
+<p>
+A small patch of land designated to grow flowers on.
+When placed at your fort, will increase
+<<rep setup.skill.aid>> in exchange for <<rep setup.skill.slaving>>.
+</p>
+
+
+:: BuildingGreatHall [nobr] {"position":"475,3725","size":"100,100"}
+<p>
+Renovate the first floor of your fort into a great hall suitable for your fledging company.
+Unlocks seeing your company information, as well as many filter options in various menus.
+This improvement is also required to build many of the advanced improvements.
+</p>
+
+
+:: BuildingGym [nobr] {"position":"225,2850","size":"100,100"}
+<p>
+Unlocks the Punching Bag slave duty, which increases the income
+made by your Entertainment Pimp
+based on the masochism skill of the slave.
+</p>
+
+
+:: BuildingHiringSquare [nobr] {"position":"100,1850","size":"100,100"}
+<p>
+A small empty space in front of your fort where you can post
+job openings.
+Unlocks a contact which gives you a quest for hiring new slavers from all across the region.
+</p>
+

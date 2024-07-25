@@ -1,0 +1,2179 @@
+FOC~COST~LIST
+
+:: CostAddHistory [nobr] {"position":"975,7100","size":"100,100"}
+Give <<devactordefault>> a history record:
+Actor <<textbox '_history' 'killed a demon lord.'>>
+<<message '(?)'>>
+  <div class='helpcard'>
+  The game will automatically record history for important moments,
+  e.g., when a slaver leave the company or when a unit gains a new trait.
+  However, you can use this to add extra flavorful things, e.g.,
+  if a unit got possessed.
+  </div>
+<</message>>.
+<<successtextlite 'Use past tense.'>>
+<<include 'CostWasHelpText'>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddHistory($qgDefaultActorName, _history)>>
+<</link>>
+
+
+:: CostAddRandomBodypartAll [nobr] {"position":"725,7975","size":"100,100"}
+<p>
+Gives
+<<devactordefault>>
+a random bodypart (can include demonic ones).
+(Can give rare ones too like <<= setup.trait.wings_angel.rep() >>!)
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddRandomBodypart($qgDefaultActorName, true)>>
+<</link>>
+
+
+:: CostAddRandomBodypartNonDemonic [nobr] {"position":"600,7975","size":"100,100"}
+<p>
+Gives
+<<devactordefault>>
+a random non-demonic bodypart.
+(Can give rare ones too like <<= setup.trait.wings_angel.rep() >>!)
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddRandomBodypart($qgDefaultActorName, false)>>
+<</link>>
+
+
+:: CostAddRandomPerTrait [nobr] {"position":"100,7975","size":"100,100"}
+<p>
+Gives
+<<devactordefault>>.
+a random trait from:
+<<for _itrait, _trait range setup.TraitHelper.getAllTraitsOfTags(['per'])>><<rep _trait>><</for>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddRandomTraitWithTags($qgDefaultActorName, ['per'])>>
+<</link>>
+
+
+:: CostAddRandomSkillTrait [nobr] {"position":"350,7975","size":"100,100"}
+<p>
+Gives
+<<devactordefault>>.
+a random trait from:
+<<for _itrait, _trait range setup.TraitHelper.getAllTraitsOfTags(['skill'])>><<rep _trait>><</for>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddRandomTraitWithTags($qgDefaultActorName, ['skill'])>>
+<</link>>
+
+
+:: CostAddTag [nobr] {"position":"975,7600","size":"100,100"}
+Give <<devactordefault>> the tag: <<textbox '_tag' ''>>.
+<<include 'CostTagHelp'>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddTag($qgDefaultActorName, _tag)>>
+<</link>>
+
+
+:: CostAddTitle [nobr] {"position":"225,7725","size":"100,100"}
+Give <<devactordefault>> the title:
+
+<<devtoolchoosetitle 'CostAddTitleDo'>>
+
+
+:: CostAddTitleDo [nobr] {"position":"350,7725","size":"100,100"}
+<<set $qcost = setup.qc.AddTitle($qgDefaultActorName, _chosentitle)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostAddTraitsGuaranteedCheck [nobr] {"position":"850,7975","size":"100,100"}
+<div>
+  <<set _guaranteed = false>>
+  <<checkbox '_guaranteed' false true autocheck>> guaranteed
+  <<message '(?)'>>
+    <div class='helpcard'>
+      If checked, then the unit is guaranteed to get this.
+      <br/>
+      <br/>
+      If checked, then the game will avoid the traits that the unit already have.
+      Otherwise, it is possible that a trait the unit already have will get selected,
+      which will result in the unit not gaining any trait.
+    </div>
+  <</message>>
+</div>
+
+
+:: CostAddTraitsRandom [nobr] {"position":"975,7975","size":"100,100"}
+<p>
+Give
+<<devactordefault>>
+a total of
+<<numberbox '_no_of_traits' 1>>
+random traits out of the following traits.
+The traits are increased,
+<<message '(?)'>>
+  <div class='helpcard'>
+    For example, if a unit has <<rep setup.trait.muscle_verythin>> and gained
+    <<rep setup.trait.muscle_verystrong>>, then the unit will now have
+    <<rep setup.trait.muscle_thin>>.
+    If you want to replace instead, use the other version.
+  </div>
+<</message>>
+not replaced.
+
+<<include 'CostAddTraitsGuaranteedCheck'>>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddTraitsRandom($qgDefaultActorName, _chosentraits, _no_of_traits, false, _guaranteed)>>
+<</link>>
+
+</p>
+
+<<set _choose_traits_attachable = true>>
+<<include 'ChooseTraits'>>
+
+:: CostAddTraitsRandomReplace [nobr] {"position":"1100,7975","size":"100,100"}
+<p>
+Give
+<<devactordefault>>
+a total of
+<<numberbox '_no_of_traits' 1>>
+random traits out of the following traits.
+The traits are <<dangertextlite 'replaced'>>.
+<<message '(?)'>>
+  <div class='helpcard'>
+    This will first remove any conflicting traits before adding the trait.
+  </div>
+<</message>>
+
+<<include 'CostAddTraitsGuaranteedCheck'>>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddTraitsRandom($qgDefaultActorName, _chosentraits, _no_of_traits, true, _guaranteed)>>
+<</link>>
+
+</p>
+
+<<set _choose_traits_attachable = true>>
+<<include 'ChooseTraits'>>
+
+
+:: CostAddUnitToUnitGroup [nobr] {"position":"100,8350","size":"100,100"}
+<p>
+Adds <<devactordefault>> to the following unit group:
+</p>
+
+<<for _iug, _ug range setup.unitgroup>>
+  <<if _ug.reuse_chance>>
+    <<rep _ug>>
+    <<capture _ug>>
+      <<button 'Select' 'QGCostDone'>>
+        <<set $qcost = setup.qc.AddUnitToUnitGroup($qgDefaultActorName, _ug)>>
+      <</button>>
+    <</capture>>
+    <br/>
+  <</if>>
+<</for>>
+
+
+:: CostAddValueTitles [nobr] {"position":"975,7725","size":"100,100"}
+Give <<devactordefault>> value title so that their value is increased by
+<<numberbox "_value_increase" 15000>>
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.AddValueTitles($qgDefaultActorName, _value_increase)>>
+<</link>>
+
+
+:: CostAllUnitSatisfyDo [nobr] {"position":"850,6725","size":"100,100"}
+<<set $qcost = setup.qc.AllUnitSatisfyDo([], [])>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostAllUnitSatisfyDo_IfHeader [nobr] {"position":"975,6725","size":"100,100"}
+<b>For all units that satisfy</b>
+
+
+:: CostAllUnitSatisfyDo_ThenHeader [nobr] {"position":"1100,6725","size":"100,100"}
+<b>Do:</b>
+
+
+:: CostBgTraitReset [nobr] {"position":"725,6850","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<include CostTraitActorCommon>>
+
+<<selecttrait 'CostBgTraitResetDo' setup.TraitHelper.getAllTraitsOfTags(['bg'])>>
+
+
+:: CostBgTraitResetDo [nobr] {"position":"850,6850","size":"100,100"}
+<<set $qcost = setup.qc.BgTraitReset($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostBlessing [nobr] {"position":"100,6975","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<p>
+Bless / Curse <<devactordefault>> with
+<<numberbox '_amount' 1>> stacks of the following blessing / curse.
+Each blessing stack is worth <<money 2500>>, while
+each curse stack is worth <<money -2500>>.
+</p>
+
+<<selecttrait 'CostBlessingDo' setup.TraitHelper.getAllTraitsOfTags(['blessingcursemax'])>>
+
+
+:: CostBlessingDo [nobr] {"position":"225,6975","size":"100,100"}
+<<set $qcost = setup.qc.Blessing($qgDefaultActorName, _amount, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostBlessingRandom [nobr] {"position":"1100,6850","size":"100,100"}
+<p>
+Bless <<devactordefault>> with
+<<numberbox '_amount' 1>> stacks of a random blessing.
+Each stack is worth <<money 2500>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Blessing($qgDefaultActorName, _amount, null, false)>>
+<</link>>
+
+
+:: CostBodyshift [nobr] {"position":"475,6975","size":"100,100"}
+<p>
+<<devactordefault>> bodyshifts.
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Bodyshift($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostBodyswap [nobr] {"position":"600,6975","size":"100,100"}
+<p>
+<<devactordefault>> swap bodies with
+<<devactor '$qgDefaultActorName2'>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Bodyswap($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostBodyswapOneDirection [nobr] {"position":"725,6975","size":"100,100"}
+<p>
+<<devactordefault>> copies
+<<devactor '$qgDefaultActorName2'>>'s body.
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.BodyswapOneDirection($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostBoonizeRandom [nobr] {"position":"850,8225","size":"100,100"}
+<<devactordefault>> gains a random temporary boon for 
+<<numberbox '_duration' 5>> weeks.
+One week of boon is worth <<money 100>> per unit.
+(E.g., 3 units each getting 5 weeks of boon is <<money 1500>>)
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.BoonizeRandom($qgDefaultActorName, _duration)>>
+<</link>>
+
+:: CostBreakup [nobr] {"position":"600,7100","size":"100,100"}
+<p>
+<<devactordefault>> breaks up with
+<<devactor '$qgDefaultActorName2'>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Breakup($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostBreakupWithYou [nobr] {"position":"725,7100","size":"100,100"}
+<p>
+<<devactordefault>> breaks up with you
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.BreakupWithYou($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostClearMentalTraits [nobr] {"position":"350,8225","size":"100,100"}
+<p>
+Remove all personality, background, skill, training, and perk traits from
+<<devactordefault>>
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.ClearMentalTraits($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostContactHasUnit [nobr] {"position":"1100,5850","size":"100,100"}
+<p>Gain <<devactordefault>> as the following contact:</p>
+
+<<for _bt range Object.values(setup.contacttemplate).filter(contact => contact.getTags().includes('hasunit'))>>
+  <div>
+    <<capture _bt>>
+      <<button 'Select' 'QGRestrictionDone'>>
+        <<set $qrestriction = setup.qc.Contact(_bt, $qgDefaultActorName)>>
+      <</button>>
+    <</capture>>
+    <<rep _bt>>
+  </div>
+<</for>>
+
+
+:: CostContactLose [nobr] {"position":"1225,5850","size":"100,100"}
+<p>Lose the following contact:</p>
+
+<<for _bt range Object.values(setup.contacttemplate)>>
+  <div>
+    <<capture _bt>>
+      <<button 'Select' 'QGRestrictionDone'>>
+        <<set $qrestriction = setup.qc.ContactLose(_bt)>>
+      <</button>>
+    <</capture>>
+    <<rep _bt>>
+  </div>
+<</for>>
+
+
+:: CostContactNoUnit [nobr] {"position":"975,5850","size":"100,100"}
+<p>Gain the following contact:</p>
+
+<<for _bt range Object.values(setup.contacttemplate).filter(contact => !contact.getTags().includes('hasunit'))>>
+  <div>
+    <<capture _bt>>
+      <<button 'Select' 'QGRestrictionDone'>>
+        <<set $qrestriction = setup.qc.Contact(_bt)>>
+      <</button>>
+    <</capture>>
+    <<rep _bt>>
+  </div>
+<</for>>
+
+
+:: CostCorrupt [nobr] {"position":"850,6975","size":"100,100"}
+<p>
+Randomly corrupt <<devactordefault>> 
+<<numberbox '_amount' 1>> times.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Corrupt($qgDefaultActorName, null, _amount)>>
+<</link>>
+
+
+:: CostCurseRandom [nobr] {"position":"1225,6850","size":"100,100"}
+<p>
+Bless <<devactordefault>> with
+<<numberbox '_amount' 1>> stacks of a random curse.
+Each stack is worth <<money -2500>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Blessing($qgDefaultActorName, _amount, null, true)>>
+<</link>>
+
+
+:: CostDecreaseTraitsRandom [nobr] {"position":"1225,7975","size":"100,100"}
+<p>
+<<devactordefault>>
+loses a total of
+<<numberbox '_no_of_traits' 1>>
+traits out of the following traits.
+The traits are decreased,
+<<message '(?)'>>
+  For example, if a unit has <<rep setup.trait.muscle_verystrong>> and loses
+  it, then it becomes <<rep setup.trait.muscle_strong>>.
+  If you want to remove it completely instead, use the other version.
+<</message>>
+not necessarily removed entirely.
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.DecreaseTraitsRandom($qgDefaultActorName, _chosentraits, _no_of_traits, false)>>
+<</link>>
+
+</p>
+
+<<set _choose_traits_attachable = true>>
+<<include 'ChooseTraits'>>
+
+
+:: CostDecreaseTraitsRandomReplace [nobr] {"position":"100,8100","size":"100,100"}
+<p>
+<<devactordefault>>
+LOSES a total of
+<<numberbox '_no_of_traits' 1>>
+random traits out of the following traits.
+The traits are <<dangertextlite 'removed'>>.
+<<message '(?)'>>
+  For example, a unit with <<rep setup.trait.muscle_verystrong>> will lost it completely,
+  instead of becoming <<rep setup.trait.muscle_strong>>.
+<</message>>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.DecreaseTraitsRandom($qgDefaultActorName, _chosentraits, _no_of_traits, true)>>
+<</link>>
+
+</p>
+
+<<set _choose_traits_attachable = true>>
+<<include 'ChooseTraits'>>
+
+
+:: CostDoAll [nobr] {"position":"975,6600","size":"100,100"}
+<<set $qcost = setup.qc.DoAll([])>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostDoAllHeader [nobr] {"position":"1100,6600","size":"100,100"}
+<<if _entry.probability !== undefined>>
+  <b>Do all of the following with <<= (_entry.probability * 100).toFixed(1)>>% chance:</b>
+<<else>>
+  <b>Do all of the following:</b>
+<</if>>
+
+
+:: CostDoAllProbability [nobr] {"position":"1225,6600","size":"100,100"}
+<p>
+Do all of the following with probability: <<numberbox "_probability" 50>>%
+<<message '(?)'>>
+  Put a percentage. For example, 50, which means these will be executed half of the time.
+<</message>>:
+</p>
+
+<<link '(Continue)' 'QGCostDone'>>
+  <<set $qcost = setup.qc.DoAll([], _probability / 100)>>
+<</link>>
+
+
+:: CostEmptyUnitGroup [nobr] {"position":"1225,8225","size":"100,100"}
+<p>
+Deletes all units from the following unit group:
+<<message '(?)'>>
+  This effectively clears this unit group.
+<</message>>
+</p>
+
+<<for _iug, _ug range setup.unitgroup>>
+  <<if _ug.reuse_chance>>
+    <<rep _ug>>
+    <<capture _ug>>
+      <<button 'Select' 'QGCostDone'>>
+        <<set $qcost = setup.qc.EmptyUnitGroup(_ug)>>
+      <</button>>
+    <</capture>>
+    <br/>
+  <</if>>
+<</for>>
+
+
+:: CostEquipment [nobr] {"position":"100,5975","size":"100,100"}
+Adds a free random equipment from an equipment pool:
+
+<<for _ieqpool, _eqpool range setup.equipmentpool>>
+  <<capture _eqpool>>
+    <br/>
+    <<rep _eqpool>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.Equipment(_eqpool)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostEquipmentDirect [nobr] {"position":"225,5975","size":"100,100"}
+Gain a free equipment:
+
+<<for _ieq, _eq range setup.equipment>>
+  <<capture _eq>>
+    <br/>
+    <<rep _eq>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.EquipmentDirect(_eq)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostEscapedSlaveRandom [nobr] {"position":"225,7600","size":"100,100"}
+<<set $qcost = setup.qc.EscapedSlaveRandom()>>
+<<include QGCostDone>>
+
+
+:: CostEvent [nobr] {"position":"600,5975","size":"100,100"}
+<div>
+Schedule the following event to trigger in
+<<numberbox '_weeks' 0>> weeks.
+<<message '(?)'>>
+  Put 0 if you want the event to trigger in the same week.
+<</message>>
+</div>
+
+<<include 'CostEventVisibleCheckbox'>>
+
+<<for _ievent, _event range setup.event>>
+  <<capture _event>>
+    <<link _event.getName() 'QGCostDone'>>
+      <<set $qcost = setup.qc.Event(_event, _weeks, null, _is_visible_in_calendar)>>
+    <</link>>
+    <br/>
+  <</capture>>
+<</for>>
+
+
+:: CostEventRoles [nobr] {"position":"1100,5975","size":"100,100"}
+<div>
+First, choose the event
+that you want to trigger in
+<<numberbox '_weeks' 0>> weeks.
+<<message '(?)'>>
+  Put 0 if you want the event to trigger in the same week.
+<</message>>
+</div>
+
+<<include 'CostEventVisibleCheckbox'>>
+
+<<for _ievent, _event range setup.event>>
+  <<capture _event>>
+    <<link _event.getName() 'CostEventRolesImplement'>>
+      <<set $qeventchosenweeks = _weeks>>
+      <<set $qeventchosen = _event>>
+      <<set $qeventisvisibleincalendar = _is_visible_in_calendar>>
+    <</link>>
+    <br/>
+  <</capture>>
+<</for>>
+
+
+:: CostEventRolesImplement [nobr] {"position":"1225,5975","size":"100,100"}
+<p>
+Select the roles in <<rep $qeventchosen>> that you want to assign with roles
+in the current thing you are making:
+</p>
+
+<p>
+<<devquestroles $qeventchosen>>
+</p>
+
+<<link '(Done)' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Event($qeventchosen, $qeventchosenweeks, setup.deepCopy($qdevquestroles), $qeventisvisibleincalendar)>>
+  <<unset $qdevquestroles>>
+<</link>>
+
+
+:: CostEventVisibleCheckbox [nobr] {"position":"475,5975","size":"100,100"}
+<div>
+  <<checkbox '_is_visible_in_calendar' false true>>
+  Visible in calendar?
+  <<message '(?)'>>
+    <div class='helpcard'>
+      If checked, this event will be visible in the player's calendar, and will be shown
+      in their list of upcoming events.
+    </div>
+  <</message>>
+</div>
+
+
+:: CostExpCommon [nobr] {"position":"100,6100","size":"100,100"}
+<p>Adds exp. Use 0 or POSITIVE to add exp, and NEGATIVE to substract exp.
+If this is a quest cost, use a NEGATIVE number. If this is a reward, use either POSITIVE
+or 0. 0 will default to automatically adjust the reward based on the quest length.</p>
+
+Multiplier: <<numberbox '_expmulti' 0>>
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<ExpDone>>
+<</link>>
+
+
+:: CostExpCrit [nobr] {"position":"350,6100","size":"100,100"}
+<<focwidget 'ExpDone'>>
+  <<set $qcost = setup.qc.ExpCrit(_expmulti)>>
+<</focwidget>>
+<<include 'CostExpCommon'>>
+
+
+:: CostExpNormal [nobr] {"position":"225,6100","size":"100,100"}
+<<focwidget 'ExpDone'>>
+  <<set $qcost = setup.qc.ExpNormal(_expmulti)>>
+<</focwidget>>
+<<include 'CostExpCommon'>>
+
+
+:: CostExpUnit [nobr] {"position":"725,7225","size":"100,100"}
+Unit <<devactordefault>> gains exp equal to <<numberbox "_weeks" 1>> weeks of questing.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.ExpUnit($qgDefaultActorName, _weeks)>>
+<</link>>
+
+
+:: CostFavor [nobr] {"position":"600,6100","size":"100,100"}
+<<focwidget 'costrelationshipwidget'>>
+  <<set $qcost = setup.qc.Favor(_company, _favor)>>
+<</focwidget>>
+
+Gain <<numberbox '_favor' 200>> favor with:
+<<message '(?)'>>
+  Insert this as 10 times the amount displayed in game.
+  For example, to add 20.5 favor, put 205.
+  Maximum favor is <<= setup.FAVOR_MAX >>.
+  5.0 favor is worth <<money 1000>>.
+<</message>>
+
+<<include 'CostFavorChoose'>>
+
+
+:: CostFavorChoose [nobr] {"position":"475,6100","size":"100,100"}
+<<for _icompany, _company range $company>>
+  <<capture _company>>
+    <<if _company != $company.player && _company != $company.independent>>
+      <br/>
+      <<rep _company>>
+      <<link '(select this)' 'QGCostDone'>>
+        <<costrelationshipwidget>>
+      <</link>>
+    <</if>>
+  <</capture>>
+<</for>>
+
+
+:: CostFavorLose [nobr] {"position":"725,6100","size":"100,100"}
+<<focwidget 'costrelationshipwidget'>>
+  <<set $qcost = setup.qc.Favor(_company, -_favor)>>
+<</focwidget>>
+
+Lose <<numberbox '_favor' 200>> favor with:
+<<message '(?)'>>
+  Insert this as 10 times the amount displayed in game.
+  For example, to lose 20.5 favor, put 205.
+  Maximum favor is <<= setup.FAVOR_MAX >>
+  5.0 favor is worth <<money 1000>>.
+<</message>>
+
+<<include 'CostFavorChoose'>>
+
+
+:: CostFavorUnitValue [nobr] {"position":"1100,7350","size":"100,100"}
+<p>
+Gain favor equal to <<devactordefault>>'s value multiplied by
+<<numberbox '_multiplier' 0.05>>. (Remember that the actual number shown in the game is ten times multiplied by this.)
+</p>
+
+<<focwidget 'costrelationshipwidget'>>
+  <<set $qcost = setup.qc.FavorUnitValue($qgDefaultActorName, _company, _multiplier)>>
+<</focwidget>>
+
+<<include 'CostFavorChoose'>>
+
+
+:: CostFirstName [nobr] {"position":"100,7475","size":"100,100"}
+<div>
+Give <<devactordefault>> the first name: <<textbox '_nickname' ''>>.
+</div>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.FirstName($qgDefaultActorName, _nickname)>>
+<</link>>
+
+
+:: CostFreePlayer [nobr] {"position":"475,7475","size":"100,100"}
+<<set $qcost = setup.qc.FreePlayer()>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostFriendship [nobr] {"position":"225,7100","size":"100,100"}
+<p>
+<<devactordefault>> gains <<numberbox '_friendship_amt' 1>> friendship with
+<<devactor '$qgDefaultActorName2'>>
+<<message '(?)'>>
+Put a negative number if you want them to gain rivalry instead.
+Note that this number is 10 times larger than displayed in game. So, if it's displayed
+as 47.2 in game, that actually means it's 472. Maximum friendship is 1000, minimum is -1000.
+<</message>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Friendship($qgDefaultActorName, $qgDefaultActorName2, _friendship_amt)>>
+<</link>>
+
+
+:: CostFriendshipWithYou [nobr] {"position":"350,7100","size":"100,100"}
+<p>
+<<devactordefault>> gains <<numberbox '_friendship_amt' 1>> friendship with you.
+<<message '(?)'>>
+Put a negative number if you want them to gain rivalry instead.
+Note that this number is 10 times larger than displayed in game. So, if it's displayed
+as 47.2 in game, that actually means it's 472. Maximum friendship is 1000, minimum is -1000.
+<</message>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.FriendshipWithYou($qgDefaultActorName, _friendship_amt)>>
+<</link>>
+
+
+:: CostGenName [nobr] {"position":"350,7475","size":"100,100"}
+<<include LoadSelectTrait>>
+
+Change <<devactordefault>>'s name to a generated one based on:
+<<message '(?)'>>
+  The game will generate a name based on their traits. In particular, race
+  and gender are the two most important traits that will determine the name.
+  So here, if you want to replace a unit's name with a demon name, put the demon race in
+  and don't put any gender --- if the gender is not put, then it will use the unit's original gender.
+<</message>>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.GenName($qgDefaultActorName, _chosentraits)>>
+<</link>>
+
+<<set _choose_traits_attachable = false>>
+<<include 'ChooseTraits'>>
+
+:: CostHeal [nobr] {"position":"1225,7100","size":"100,100"}
+<<devactordefault>> is healed by <<numberbox '_healamt' 1>> weeks.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Heal($qgDefaultActorName, _healamt)>>
+<</link>>
+
+
+:: CostHideAll [nobr] {"position":"100,6725","size":"100,100"}
+<p>
+Do all of the following, but mask the description. Instead, show:
+<<textbox '_description' ''>>.
+</p>
+
+<<link '(Continue)' 'QGCostDone'>>
+  <<set $qcost = setup.qc.HideAll([], _description)>>
+<</link>>
+
+
+:: CostHideAllHeader [nobr] {"position":"225,6725","size":"100,100"}
+<b>Do all of the following, but mask the description and show "<<= _entry.explain()>>" instead:</b>
+
+
+:: CostHookup [nobr] {"position":"475,7100","size":"100,100"}
+<p>
+<<devactordefault>> becomes lovers with
+<<devactor '$qgDefaultActorName2'>>
+<<message '(?)'>>
+  <div class='helpcard'>
+    If they had other lovers previously, they will break up first.
+  </div>
+<</message>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Hookup($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostHookupWithYou [nobr] {"position":"850,7100","size":"100,100"}
+<p>
+<<devactordefault>> hooks up with you
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.HookupWithYou($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostIfThenElse [nobr] {"position":"350,6725","size":"100,100"}
+<<set $qcost = setup.qc.IfThenElse(setup.qres.Never('Never'), setup.qc.DoAll([]), setup.qc.DoAll([]))>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostIfThenElse_ElseHeader [nobr] {"position":"725,6725","size":"100,100"}
+<b>Else:</b>
+<<message '(?)'>>
+  What happens if the condition is not satisfied?
+<</message>>
+
+
+:: CostIfThenElse_IfHeader [nobr] {"position":"475,6725","size":"100,100"}
+<b>If</b>
+
+
+:: CostIfThenElse_ThenHeader [nobr] {"position":"600,6725","size":"100,100"}
+<b>Then:</b>
+<<message '(?)'>>
+  What happens if the condition is satisfied?
+<</message>>
+
+
+:: CostInjury [nobr] {"position":"1100,7100","size":"100,100"}
+<<devactordefault>> is injured for <<numberbox '_injuryamt' 1>> weeks.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Injury($qgDefaultActorName, _injuryamt)>>
+<</link>>
+
+
+:: CostIre [nobr] {"position":"850,6100","size":"100,100"}
+<<focwidget 'costrelationshipwidget'>>
+  <<set $qcost = setup.qc.Ire(_company, _ire)>>
+<</focwidget>>
+
+Gain <<numberbox '_ire' 1>> ire with:
+<<message '(?)'>>
+  1 ire is worth <<money 500>>. When ire reaches 20,
+  something bad will happen to the company.
+<</message>>
+
+<<include 'CostFavorChoose'>>
+
+
+:: CostIreLose [nobr] {"position":"975,6100","size":"100,100"}
+<<focwidget 'costrelationshipwidget'>>
+  <<set $qcost = setup.qc.Ire(_company, -_ire)>>
+<</focwidget>>
+
+Lose <<numberbox '_ire' 20>> ire with:
+<<message '(?)'>>
+  1 ire is worth <<money 500>>. When ire reaches 20,
+  something bad will happen to the company.
+<</message>>
+
+<<include 'CostFavorChoose'>>
+
+
+:: CostItem [nobr] {"position":"1100,6100","size":"100,100"}
+Gain an item:
+
+<<for _iitem, _item range setup.item>>
+  <<capture _item>>
+    <br/>
+    <<rep _item>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.Item(_item)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostItemIfNew [nobr] {"position":"225,6225","size":"100,100"}
+Gain an item, unless you already have the item, then nothing happens:
+
+<<for _iitem, _item range setup.item>>
+  <<capture _item>>
+    <br/>
+    <<rep _item>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.ItemIfNew(_item)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostItemPool [nobr] {"position":"100,6225","size":"100,100"}
+Gain an item from an item pool:
+
+<<for _iitem, _item range setup.itempool>>
+  <<capture _item>>
+    <br/>
+    <<rep _item>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.ItemPool(_item)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostLeave [nobr] {"position":"225,7225","size":"100,100"}
+<p>
+<<devactordefault>> will be on leave from your company
+for <<numberbox "_weeks" 1>> weeks.
+The reason is as follows.
+</p>
+
+<<include 'CostLeaveReason'>>
+
+<br/>
+
+<div>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Leave($qgDefaultActorName, _leavereason, _weeks)>>
+<</link>>
+</div>
+
+
+:: CostLeaveNoDuration [nobr] {"position":"350,7225","size":"100,100"}
+<p>
+<<devactordefault>> will be on leave from your company for an indefinite number of weeks.
+The reason is as follows.
+</p>
+
+<<include 'CostLeaveReason'>>
+
+<br/>
+
+<div>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Leave($qgDefaultActorName, _leavereason)>>
+<</link>>
+</div>
+
+
+:: CostLeaveReason [nobr] {"position":"100,7225","size":"100,100"}
+<div>
+Unit
+<<textbox '_leavereason' 'a|is training to become a great warrior'>>.
+<<message '(?)'>>
+  <div class='helpcard'>
+    Complete the sentence describing the reason for being on leave.
+    Don't put a period at the end.
+  </div>
+<</message>>
+</div>
+
+
+:: CostLoseEquipment [nobr] {"position":"350,5975","size":"100,100"}
+Lose an equipment:
+
+<<for _ieq, _eq range setup.equipment>>
+  <<capture _eq>>
+    <br/>
+    <<rep _eq>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.EquipmentLose(_eq)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostLoseItem [nobr] {"position":"1225,6100","size":"100,100"}
+Lose <<numberbox '_lostnumber' 1>> copies of:
+
+<<for _iitem, _item range setup.item>>
+  <<capture _item>>
+    <br/>
+    <<rep _item>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.LoseItem(_item, _lostnumber)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostMindbreak [nobr] {"position":"850,7225","size":"100,100"}
+Unit <<devactordefault>> is mindbroken.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Mindbreak($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostMissingUnit [nobr] {"position":"975,7225","size":"100,100"}
+<p>
+Unit <<devactordefault>> will be gone from your company,
+but can be rescued one day.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnit($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostMissingUnitForever [nobr] {"position":"1100,7225","size":"100,100"}
+<p>
+Unit <<devactordefault>> will be gone from your company
+<<dangertext 'forever'>> with no chance of being rescued.
+</p>
+
+<p>
+  <<dangertext "Important:">>
+  Please make sure that whichever units that will become missing forever
+  is not in a party. This can be checked by using the Restriction named:
+  "Not in Party"
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitForever($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostMissingUnitOpposite [nobr] {"position":"100,7350","size":"100,100"}
+<p>
+Unit <<devactordefault>> will switch their job.
+<<message '(?)'>>
+A slaver becomes a slave available in the slave pens,
+while a slave becomes a slaver available in the prospects hall.
+<</message>>
+Replace their flavor text background with:
+The slave <<textbox '_background' 'a|was'>>.
+For example, you can write "a|was a slave corrupted into a slaver".
+(Leave blank to keep old flavor text. The a|was syntax will automatically convert it to either
+was or were)
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitOpposite($qgDefaultActorName, _background)>>
+<</link>>
+
+
+:: CostMissingUnitRebuy [nobr] {"position":"1225,7225","size":"100,100"}
+<p>
+Unit <<devactordefault>> will be gone from your company, but can be
+<<successtext 'rebought'>> immediately.
+The price is 
+<<numberbox '_multiplier' 1.0>> times their value.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRebuy($qgDefaultActorName, _multiplier)>>
+<</link>>
+
+
+:: CostMissingUnitRecaptureEasy [nobr] {"position":"225,7350","size":"100,100"}
+<p>
+Unit <<devactordefault>> will attempt an escape. A quest will then be generated
+which must be done in order to recapture the slave.
+For this one, the quest will be <<successtext 'easy'>>, with level around 15-30.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRecapture($qgDefaultActorName, 'escapeeasy')>>
+<</link>>
+
+
+:: CostMissingUnitRecaptureEasySlaver [nobr] {"position":"600,7350","size":"100,100"}
+<p>
+Slaver <<devactordefault>> will be captured, but immediately rescue-able with a quest.
+For this one, the quest will be <<successtext 'easy'>>, with level around 15-30.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRecapture($qgDefaultActorName, 'capturedeasy')>>
+<</link>>
+
+
+:: CostMissingUnitRecaptureHard [nobr] {"position":"475,7350","size":"100,100"}
+<p>
+Unit <<devactordefault>> will attempt an escape. A quest will then be generated
+which must be done in order to recapture the slave.
+For this one, the quest will be <<dangertext 'hard'>>, with level 50-70.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRecapture($qgDefaultActorName, 'escapehard')>>
+<</link>>
+
+
+:: CostMissingUnitRecaptureHardSlaver [nobr] {"position":"850,7350","size":"100,100"}
+<p>
+Slaver <<devactordefault>> will be captured, but immediately rescue-able with a quest.
+For this one, the quest will be <<dangertext 'hard'>>, with level 50-70.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRecapture($qgDefaultActorName, 'capturedhard')>>
+<</link>>
+
+
+:: CostMissingUnitRecaptureMedium [nobr] {"position":"350,7350","size":"100,100"}
+<p>
+Unit <<devactordefault>> will attempt an escape. A quest will then be generated
+which must be done in order to recapture the slave.
+For this one, the quest will be medium difficulty, with level around 35-50.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRecapture($qgDefaultActorName, 'escapemedium')>>
+<</link>>
+
+
+:: CostMissingUnitRecaptureMediumSlaver [nobr] {"position":"725,7350","size":"100,100"}
+<p>
+Slaver <<devactordefault>> will be captured, but immediately rescue-able with a quest.
+For this one, the quest will be medium difficulty, with level around 35-50.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MissingUnitRecapture($qgDefaultActorName, 'capturedmedium')>>
+<</link>>
+
+
+:: CostMoneyCommon [nobr] {"position":"350,6225","size":"100,100"}
+<<set _moneymulti = 0>>
+<<MoneyDone>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostMoneyCrit [nobr] {"position":"600,6225","size":"100,100"}
+<<focwidget 'MoneyDone'>>
+  <<set $qcost = setup.qc.MoneyCrit(_moneymulti)>>
+<</focwidget>>
+<<include 'CostMoneyCommon'>>
+
+
+:: CostMoneyCustom [nobr] {"position":"850,6225","size":"100,100"}
+<p>
+Gain
+<<numberbox '_money' 1500>>
+money.<<message '(?)'>>This is the amount of money that the quest should give on
+a Lv. 40 quest. The amount will be scaled down automatically if the quest level is lower.<</message>>
+</p>
+
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MoneyCustom(_money)>>
+<</link>>
+
+
+:: CostMoneyCustomFixed [nobr] {"position":"1100,6225","size":"100,100"}
+<p>
+Gain a FIXED amount of money:
+<<numberbox '_money' 1500>>g.
+<<message '(?)'>>
+Unlike all other money options, this amount will not be scaled depending on the level.
+<</message>>
+</p>
+
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Money(_money)>>
+<</link>>
+
+
+:: CostMoneyLoseCustom [nobr] {"position":"975,6225","size":"100,100"}
+<p>
+Lose
+<<numberbox '_money' 1500>>
+money.<<message '(?)'>>This is the amount of money that the quest should take on
+a Lv. 40 quest. The amount will be scaled down automatically if the quest level is lower.<</message>>
+</p>
+
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MoneyLoseCustom(_money)>>
+<</link>>
+
+
+:: CostMoneyLoseCustomFixed [nobr] {"position":"1225,6225","size":"100,100"}
+<p>
+Lose a FIXED amount of money:
+<<numberbox '_money' 1500>>g.
+<<message '(?)'>>
+Unlike all other money options, this amount will not be scaled depending on the level.
+<</message>>
+</p>
+
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Money(-_money)>>
+<</link>>
+
+
+:: CostMoneyNormal [nobr] {"position":"475,6225","size":"100,100"}
+<<focwidget 'MoneyDone'>>
+  <<set $qcost = setup.qc.MoneyNormal(_moneymulti)>>
+<</focwidget>>
+<<include 'CostMoneyCommon'>>
+
+
+:: CostMoneySmall [nobr] {"position":"725,6225","size":"100,100"}
+<<focwidget 'MoneyDone'>>
+  <<set $qcost = setup.qc.MoneySmall(_moneymulti)>>
+<</focwidget>>
+<<include 'CostMoneyCommon'>>
+
+
+:: CostMoneyUnitValue [nobr] {"position":"975,7350","size":"100,100"}
+Gain money equal to <<devactordefault>>'s value multiplied by
+<<numberbox '_multiplier' 0.5>>, and capped at <<numberbox '_cap' 10000>>g.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.MoneyUnitValue($qgDefaultActorName, _multiplier, _cap)>>
+<</link>>
+
+
+:: CostNickname [nobr] {"position":"1225,7350","size":"100,100"}
+<div>
+Give <<devactordefault>> the nickname: <<textbox '_nickname' ''>>.
+</div>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Nickname($qgDefaultActorName, _nickname)>>
+<</link>>
+
+
+:: CostOneRandom [nobr] {"position":"1225,6725","size":"100,100"}
+<<set $qcost = setup.qc.OneRandom([])>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostOneRandomHeader [nobr] {"position":"100,6850","size":"100,100"}
+<b>A random effect out of:</b>
+
+
+:: CostOneRandomSeed [nobr] {"position":"225,6850","size":"100,100"}
+<<set $qcost = setup.qc.OneRandomSeed([])>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostOneRandomSeedHeader [nobr] {"position":"475,6850","size":"100,100"}
+<b>A SEEDED <<message '(?)'>>
+<<include 'CostSeedHelpText'>>
+<</message>>random effect out of:</b>
+
+
+:: CostOpportunity [nobr] {"position":"100,6350","size":"100,100"}
+Gain the following chosen opportunity.
+<br/>
+
+<<devchooseopportunity 'CostOpportunityDo'>>
+
+
+:: CostOpportunityDo [nobr] {"position":"225,6350","size":"100,100"}
+<<set $qcost = setup.qc.Opportunity(_opportunitychosen)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostOpportunityRoles [nobr] {"position":"725,6350","size":"100,100"}
+<div>
+First, choose the opportunity:
+</div>
+
+<<devchooseopportunity 'CostOpportunityRolesDo'>>
+
+
+:: CostOpportunityRolesDo [nobr] {"position":"850,6350","size":"100,100"}
+<<set $qopportunitychosen = _opportunitychosen>>
+<<gotowipehistory 'CostOpportunityRolesImplement'>>
+
+
+:: CostOpportunityRolesImplement [nobr] {"position":"975,6350","size":"100,100"}
+<p>
+Select the roles in <<rep $qopportunitychosen>> that you want to assign with roles
+in the current thing you are making:
+</p>
+
+<p>
+<<devquestroles $qopportunitychosen>>
+</p>
+
+<<link '(Done)' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Opportunity($qopportunitychosen, setup.deepCopy($qdevquestroles))>>
+  <<unset $qdevquestroles>>
+<</link>>
+
+
+:: CostOutcomesCrit [nobr] {"position":"1100,6350","size":"100,100"}
+<<set $qcost = setup.qc.Outcomes('crit')>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostOutcomesDisaster [nobr] {"position":"225,6475","size":"100,100"}
+<<set $qcost = setup.qc.Outcomes('disaster')>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostOutcomesFailure [nobr] {"position":"100,6475","size":"100,100"}
+<<set $qcost = setup.qc.Outcomes('failure')>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostOutcomesSuccess [nobr] {"position":"1225,6350","size":"100,100"}
+<<set $qcost = setup.qc.Outcomes('success')>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostParent [nobr] {"position":"100,7100","size":"100,100"}
+<p>
+<<devactordefault>> becomes the parent of
+<<devactor '$qgDefaultActorName2'>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Parent($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostPerkChoice [nobr] {"position":"1100,8100","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<div>
+<<devactordefault>> gain and can learn the following perk:
+</div>
+
+<<set _choices = setup.TraitHelper.getAllTraitsOfTags(['perk']).filter(perk => !perk.getTags().includes('perkbasic'))>>
+<<selecttrait 'CostPerkChoiceDo' _choices>>
+
+
+:: CostPerkChoiceDo [nobr] {"position":"1225,8100","size":"100,100"}
+<<set $qcost = setup.qc.PerkChoice($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostPermanentlyCorrupt [nobr] {"position":"975,6975","size":"100,100"}
+<p>
+Randomly <<dangertext 'PERMANENTLY'>> corrupt <<devactordefault>>.
+<<message '(?)'>>
+  <div class='helpcard'>
+    Permanent corruption has a much lower chance to misfire, and cannot be purified.
+  </div>
+<</message>>
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.PermanentlyCorrupt($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostPrestige [nobr] {"position":"350,6475","size":"100,100"}
+<p>Adds or substract prestige. Use 0 or POSITIVE to add money, and NEGATIVE to substract money.
+If this is a quest cost, use a NEGATIVE number.</p>
+
+Prestige: <<numberbox '_prestige' 1>>
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Prestige(_prestige)>>
+<</link>>
+
+
+:: CostPurify [nobr] {"position":"600,7475","size":"100,100"}
+<p>
+Randomly purify <<devactordefault>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Purify($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostQuest [nobr] {"position":"475,6475","size":"100,100"}
+Gain <<numberbox '_quantity' 1>> quests from a questpool:
+
+<<for _iquestpool, _questpool range setup.questpool>>
+  <<capture _questpool>>
+    <br/>
+    <<rep _questpool>>
+    <<link '(select this)' 'QGCostDone'>>
+      <<set $qcost = setup.qc.QuestDelay(_questpool, _quantity)>>
+    <</link>>
+  <</capture>>
+<</for>>
+
+
+:: CostQuestDirect [nobr] {"position":"600,6475","size":"100,100"}
+Gain the following chosen quest.
+<br/>
+
+<<devchoosequest 'CostQuestDirectDo'>>
+
+
+:: CostQuestDirectDo [nobr] {"position":"725,6475","size":"100,100"}
+<<set $qcost = setup.qc.QuestDirect(_questchosen)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostQuestDirectForceAssign [nobr] {"position":"1225,6475","size":"100,100"}
+First, choose the quest:
+
+<<devchoosequest 'CostQuestDirectForceAssignDo'>>
+
+
+:: CostQuestDirectForceAssignDo [nobr] {"position":"100,6600","size":"100,100"}
+<<set $qquestchosen = _questchosen>>
+<<gotowipehistory 'CostQuestDirectForceAssignImplement'>>
+
+
+:: CostQuestDirectForceAssignImplement [nobr] {"position":"225,6600","size":"100,100"}
+<p>
+Match the roles in <<rep $qquestchosen>> that you want to assign with units going on in this quest.
+Note that all roles must be matched.
+</p>
+
+<p>
+<<devquestroles $qquestchosen>>
+</p>
+
+<<link '(Done)'>>
+  /* sanity checks */
+  <<set _error = setup.qcImpl.QuestDirectForceAssign.sanityCheckDevTool($qquestchosen, $qdevquestroles)>>
+  <<if _error>>
+    <<warning _error>>
+  <<else>>
+    <<set $qcost = setup.qc.QuestDirectForceAssign($qquestchosen, setup.deepCopy($qdevquestroles))>>
+    <<unset $qdevquestroles>>
+    <<goto 'QGCostDone'>>
+  <</if>>
+<</link>>
+
+
+:: CostQuestDirectRoles [nobr] {"position":"850,6475","size":"100,100"}
+First, choose the quest:
+
+<<devchoosequest 'CostQuestDirectRolesDo'>>
+
+
+:: CostQuestDirectRolesDo [nobr] {"position":"975,6475","size":"100,100"}
+<<set $qquestchosen = _questchosen>>
+<<gotowipehistory 'CostQuestDirectRolesImplement'>>
+
+
+:: CostQuestDirectRolesImplement [nobr] {"position":"1100,6475","size":"100,100"}
+<p>
+Select the roles in <<rep $qquestchosen>> that you want to assign with roles
+in the current thing you are making:
+</p>
+
+<p>
+<<devquestroles $qquestchosen>>
+</p>
+
+<<link '(Done)' 'QGCostDone'>>
+  <<set $qcost = setup.qc.QuestDirect($qquestchosen, setup.deepCopy($qdevquestroles))>>
+  <<unset $qdevquestroles>>
+<</link>>
+
+
+:: CostQuestDirectSelf [nobr] {"position":"725,6600","size":"100,100"}
+<<set $qcost = setup.qc.QuestDirectSelf()>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostQuestDirectSelfRoles [nobr] {"position":"850,6600","size":"100,100"}
+<p>
+Select the roles in the newly generated quest that you want to assign with roles
+in the current quest:
+</p>
+
+<p>
+<<devquestroles $dtquest>>
+</p>
+
+<<link '(Done)' 'QGCostDone'>>
+  <<set $qcost = setup.qc.QuestDirectSelf(setup.deepCopy($qdevquestroles))>>
+  <<unset $qdevquestroles>>
+<</link>>
+
+
+:: CostRemoveFromUnitGroup [nobr] {"position":"1100,8225","size":"100,100"}
+<p>
+Deletes <<devactordefault>>.
+<<message '(?)'>>
+  Only relevant for unit groups that retain their units.
+  Will make the unit "gone" from that unit group.
+  For example, you can make a slaver in the Missing Slaver unit gone,
+  i.e., no longer rescue-able. Often used in quests with persistent units to make
+  the persistent unit disappear and replaced with a new one.
+<</message>>
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveFromUnitGroup($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostRemovePerkChoice [nobr] {"position":"100,8225","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<div>
+<<devactordefault>> loses access to the following perk (the perk will also get removed if they happen to already learn it):
+</div>
+
+<<selecttrait 'CostRemovePerkChoiceDo' setup.TraitHelper.getAllTraitsOfTags(['perkspecial'])>>
+
+
+:: CostRemovePerkChoiceDo [nobr] {"position":"225,8225","size":"100,100"}
+<<set $qcost = setup.qc.RemovePerkChoice($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostRemoveRandomBgTrait [nobr] {"position":"600,8100","size":"100,100"}
+Unit <<devactordefault>> will lose a random background.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveRandomTraitWithTag($qgDefaultActorName, 'bg')>>
+<</link>>
+
+
+:: CostRemoveRandomPerTrait [nobr] {"position":"725,8100","size":"100,100"}
+Unit <<devactordefault>> will lose a random personality.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveRandomTraitWithTag($qgDefaultActorName, 'per')>>
+<</link>>
+
+
+:: CostRemoveRandomTraitWithTagPer [nobr] {"position":"225,7975","size":"100,100"}
+<p>
+<<devactordefault>>.
+loses a random trait from:
+<<for _itrait, _trait range setup.TraitHelper.getAllTraitsOfTags(['per'])>><<rep _trait>><</for>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveRandomTraitWithTag($qgDefaultActorName, 'per')>>
+<</link>>
+
+
+:: CostRemoveRandomTraitWithTagSkill [nobr] {"position":"475,7975","size":"100,100"}
+<p>
+<<devactordefault>>.
+loses a random trait from:
+<<for _itrait, _trait range setup.TraitHelper.getAllTraitsOfTags(['skill'])>><<rep _trait>><</for>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveRandomTraitWithTag($qgDefaultActorName, 'skill')>>
+<</link>>
+
+
+:: CostRemoveTag [nobr] {"position":"1100,7600","size":"100,100"}
+From <<devactordefault>>, remove their tag (if any): <<textbox '_tag' ''>>.
+<<include 'CostTagHelp'>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveTag($qgDefaultActorName, _tag)>>
+<</link>>
+
+
+:: CostRemoveTagGlobal [nobr] {"position":"1225,7600","size":"100,100"}
+From ALL units, remove tag (if any): <<textbox '_tag' ''>>.
+<<include 'CostTagHelp'>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.RemoveTagGlobal(_tag)>>
+<</link>>
+
+
+:: CostRemoveTitle [nobr] {"position":"475,7725","size":"100,100"}
+<<devactordefault>> loses the title:
+
+<<devtoolchoosetitle 'CostRemoveTitleDo'>>
+
+
+:: CostRemoveTitleDo [nobr] {"position":"600,7725","size":"100,100"}
+<<set $qcost = setup.qc.RemoveTitle($qgDefaultActorName, _chosentitle)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostRemoveTitleGlobal [nobr] {"position":"725,7725","size":"100,100"}
+From <<dangertextlite 'ALL'>> units, remove the title:
+
+<<devtoolchoosetitle 'CostRemoveTitleGlobalDo'>>
+
+
+:: CostRemoveTitleGlobalDo [nobr] {"position":"850,7725","size":"100,100"}
+<<set $qcost = setup.qc.RemoveTitleGlobal(_chosentitle)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostResetInnateTraits [nobr] {"position":"475,8100","size":"100,100"}
+Unit <<devactordefault>> will gain all their current skin traits as their innate traits.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.ResetInnateTraits($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostResetLevel [nobr] {"position":"725,7475","size":"100,100"}
+Resets the level of <<devactordefault>> to Level 1.
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.ResetLevel($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostRetire [nobr] {"position":"850,7475","size":"100,100"}
+Unit <<devactordefault>> is forcefully made into a retiree.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Retire($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostReturn [nobr] {"position":"475,7225","size":"100,100"}
+<p>
+<<devactordefault>> will return to your company from their leave.
+</p>
+
+<div>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Return($qgDefaultActorName)>>
+<</link>>
+</div>
+
+
+:: CostSeedHelpText [nobr] {"position":"350,6850","size":"100,100"}
+<div class='helpcard'>
+  When seeded, the randomness is determined by the quest's "seed" value.
+  Each quest will be assigned a random seed value at the start, but this value will not
+  change throughout the quest.
+  This seed value is then modulo'd by the number of outcomes, to determine which one to get.
+  <br/>
+  <br/>
+  For example, with three outcomes, then the first outcome will occur when
+
+  """
+  gQuest.getSeed() % 3 == 0,
+  """
+
+  the second outcome will occur when
+
+  """
+  gQuest.getSeed() % 3 == 1,
+  """
+
+  and the third outcome will occur when
+
+  """
+  gQuest.getSeed() % 3 == 2
+  """
+
+  This can then be used during writing, so you can write the quest based on which outcome.
+  <br/>
+  <br/>
+  You can condition upon this in Content Creator, by going to: This, then If... seed.
+</div>
+
+
+:: CostSetBodyshifter [nobr] {"position":"350,6975","size":"100,100"}
+<p>
+<<devactordefault>> becomes a bodyshifter, with
+<<devactor '$qgDefaultActorName2'>> as its other body.
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.SetBodyshifter($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostSetCooldownEvent [nobr] {"position":"725,5975","size":"100,100"}
+<p>
+The following event cannot be generated in the next
+<<numberbox "_cooldown" 200>> weeks:
+</p>
+
+<<for _ievent, _event range setup.event>>
+  <<capture _event>>
+    <<link _event.getName() 'QGCostDone'>>
+      <<set $qcost = setup.qc.SetCooldownEvent(_event, _cooldown)>>
+    <</link>>
+    <br/>
+  <</capture>>
+<</for>>
+
+
+:: CostSetCooldownEventSelf [nobr] {"position":"850,5975","size":"100,100"}
+This event cannot be generated in the next <<numberbox '_cooldown' 200>> weeks.
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.SetCooldownEvent(null, _cooldown)>>
+<</link>>
+
+
+:: CostSetCooldownOpportunity [nobr] {"position":"350,6350","size":"100,100"}
+<p>
+The following opportunity cannot be generated in the next
+<<numberbox "_cooldown" 200>> weeks:
+</p>
+
+<<devchooseopportunity 'CostSetCooldownOpportunityDo'>>
+
+
+:: CostSetCooldownOpportunityDo [nobr] {"position":"475,6350","size":"100,100"}
+<<set $qcost = setup.qc.SetCooldownOpportunity(_opportunitychosen, _cooldown)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostSetCooldownOpportunitySelf [nobr] {"position":"600,6350","size":"100,100"}
+This opportunity cannot be generated in the next <<numberbox '_cooldown' 200>> weeks.
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.SetCooldownOpportunity(null, _cooldown)>>
+<</link>>
+
+
+:: CostSetCooldownQuest [nobr] {"position":"350,6600","size":"100,100"}
+<p>
+The following quest cannot be generated in the next
+<<numberbox "_cooldown" 200>> weeks:
+</p>
+
+<<devchoosequest 'CostSetCooldownQuestDo'>>
+
+
+:: CostSetCooldownQuestDo [nobr] {"position":"475,6600","size":"100,100"}
+<<set $qcost = setup.qc.SetCooldownQuest(_questchosen, _cooldown)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostSetCooldownQuestSelf [nobr] {"position":"600,6600","size":"100,100"}
+This quest cannot be generated in the next <<numberbox '_cooldown' 200>> weeks.
+
+<<link 'Add cost' 'QGCostDone'>>
+  <<set $qcost = setup.qc.SetCooldownQuest(null, _cooldown)>>
+<</link>>
+
+
+:: CostSibling [nobr] {"position":"1100,6975","size":"100,100"}
+<p>
+<<devactordefault>> becomes siblings with
+<<devactor '$qgDefaultActorName2'>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Sibling($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostSkillBoost [nobr] {"position":"975,7475","size":"100,100"}
+<div>
+Boost <<devactordefault>>'s skill permanently by 1 point.
+This is worth <<money 15000>>.
+<<include "SkillBoostHelpText">>
+</div>
+
+<<for _skill range setup.skill>>
+  <<capture _skill>>
+    <<button _skill.rep() 'QGCostDone'>>
+      <<set $qcost = setup.qc.SkillBoost($qgDefaultActorName, _skill)>>
+    <</button>>
+  <</capture>>
+<</for>>
+
+
+:: CostSlave [nobr] {"position":"1225,7475","size":"100,100"}
+<p>
+Gain slave: <<devactordefault>> with the following background.
+The slave <<textbox '_background' 'a|was'>>.
+For example, you can write "a|was a farmer".
+<<include 'CostWasHelpText'>>
+
+<br/>
+The slave will be <<successtextlite 'free'>> to get.
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Slave($qgDefaultActorName, _background, _needmoney)>>
+<</link>>
+
+
+:: CostSlaveMarker [nobr] {"position":"350,7600","size":"100,100"}
+<<devactordefault>> is marked as a slave, for gender preference.
+<<message '(?)'>>
+  You can use this to mark a certain actor to use slave's gender preferences.
+  You don't have to use this when the unit is already a possible slave reward,
+  but you can use this if the unit is just a slave participating in the story.
+<</message>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.SlaveMarker($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostSlaveMercenary [nobr] {"position":"100,7600","size":"100,100"}
+<p>
+Gain slave: <<devactordefault>> with the following background.
+The slave <<textbox '_background' 'a|was'>>.
+For example, you can write "a|was a farmer".
+<<include 'CostWasHelpText'>>
+
+<br/>
+The slave will need to be <<dangertextlite 'bought'>> to get.
+The price is multiplied by <<numberbox '_multi' 1>>.
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Slave($qgDefaultActorName, _background, /* mercenary = */ true, _multi)>>
+<</link>>
+
+
+:: CostSlaveOrder [nobr] {"position":"600,6850","size":"100,100"}
+<p>
+Choose a slave order to gain:
+<<link '(Create new slave order)' 'SlaveOrderGen'>>
+  <<set _sobaserole = null>>
+  <<include 'SOGenInit'>>
+<</link>>
+</p>
+
+<<for _islaveorder, _slaveorder range $qcustomslaveorder>>
+  <<capture _slaveorder>>
+    <<= _slaveorder.explain()>>
+    <<link '(Choose this)' 'QGCostDone'>>
+      <<set $qcost = _slaveorder>>
+    <</link>>
+
+    <<link '(Create new slave order based on this)' 'SlaveOrderGen'>>
+      <<set _sobaserole = _slaveorder>>
+      <<include 'SOGenInit'>>
+    <</link>>
+
+    <br/>
+  <</capture>>
+<</for>>
+
+<br/>
+<br/>
+<<devtoolreturnbutton>>
+
+
+:: CostSlaver [nobr] {"position":"475,7600","size":"100,100"}
+<p>
+Gain a slaver: <<devactordefault>> with the following background.
+The slaver <<textbox '_background' 'a|was'>>.
+For example, you can write "a|was a hunter".
+<<include 'CostWasHelpText'>>
+
+<br/>
+The slaver will offer to join your company for <<successtextlite 'free'>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Slaver($qgDefaultActorName, _background)>>
+<</link>>
+
+
+:: CostSlaverMarker [nobr] {"position":"725,7600","size":"100,100"}
+<<devactordefault>> is marked as a slaver, for gender preference.
+<<message '(?)'>>
+  You can use this to mark a certain actor to use slaver's gender preferences.
+  You don't have to use this when the unit is already a possible slaver reward,
+  but you can use this if the unit is just a slaver participating in the story.
+<</message>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.SlaverMarker($qgDefaultActorName)>>
+<</link>>
+
+
+:: CostSlaverMercenary [nobr] {"position":"600,7600","size":"100,100"}
+<p>
+Gain a slaver: <<devactordefault>> with the following background.
+The slaver <<textbox '_background' 'a|was'>>.
+For example, you can write "a|was a hunter".
+<<include 'CostWasHelpText'>>
+
+<br/>
+The slaver needs to be <<dangertextlite 'paid'>> money to join your company.
+The price is multiplied by <<numberbox '_multi' 1>>.
+</p>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Slaver($qgDefaultActorName, _background, /* mercenary = */ true, _multi)>>
+<</link>>
+
+
+:: CostSurname [nobr] {"position":"225,7475","size":"100,100"}
+<div>
+Give <<devactordefault>> the surname: <<textbox '_nickname' ''>>.
+</div>
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Surname($qgDefaultActorName, _nickname)>>
+<</link>>
+
+
+:: CostTagHelp [nobr] {"position":"850,7600","size":"100,100"}
+<<message '(?)'>>
+Tag acts as a flag that you can set on units.
+This can later be checked --- e.g., you can require that a quest
+only be generated when you have a unit with a certain flag.
+Use this only when you need, and remove the tag when you are done.
+Also, consider using titles instead. The difference between titles and tags
+is that: title is visible to the user and can have gameplay effects (e.g., increasing skills),
+while tags are hidden and has no gameplay effect.
+<</message>>
+
+
+:: CostTrait [nobr] {"position":"225,7850","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<devactordefault>> increases the following trait:
+<<message '(?)'>>
+(Here, increases means that
+the level increase, up to the chosen trait. E.g.,
+a unit with muscle_strong will increase to muscle_verystrong, when the chosen
+trait is muscle_extremelystrong, while a unit with muscle_thin will have the trait disappear.)
+<</message>>
+
+<br/>
+
+<<selecttrait 'CostTraitDo' setup.TraitHelper.getAttachableTraitsInContentCreator()>>
+
+
+:: CostTraitActorCommon [nobr] {"position":"1100,7725","size":"100,100"}
+<<devactordefault>> gains the following trait:
+<br/>
+
+
+:: CostTraitAndMakeInnate [nobr] {"position":"225,8100","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<devactordefault>> permanently (not purifiable) gain the following trait:
+<br/>
+
+<<selecttrait 'CostTraitAndMakeInnateDo' setup.TraitHelper.getAllTraitsOfTags(['skin'])>>
+
+
+:: CostTraitAndMakeInnateDo [nobr] {"position":"350,8100","size":"100,100"}
+<<set $qcost = setup.qc.TraitAndMakeInnate($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitDecrease [nobr] {"position":"725,7850","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<devactordefault>> decreases the following trait up to the given trait:
+<<message '(?)'>>
+For example, if you choose small_dick, then it will change a unit with large dick into
+medium dick, while unit with small dick remain small dick.
+<</message>>
+<br/>
+
+<<selecttrait 'CostTraitDecreaseDo' setup.TraitHelper.getAllTraitsOfTags(['decreasable'])>>
+
+
+:: CostTraitDecreaseDo [nobr] {"position":"850,7850","size":"100,100"}
+<<set $qcost = setup.qc.TraitDecrease($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitDo [nobr] {"position":"350,7850","size":"100,100"}
+<<set $qcost = setup.qc.Trait($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitIncreaseExisting [nobr] {"position":"975,7850","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<devactordefault>> increases the following trait, if they ALREADY have it:
+<<message '(?)'>>
+For example, if you choose large_dick, then it will give it a larger dick ONLY
+if it already have some sort of dick before.
+<</message>>
+<br/>
+
+<<selecttrait 'CostTraitIncreaseExistingDo' setup.TraitHelper.getAllTraitsOfTags(['decreasable'])>>
+
+
+:: CostTraitIncreaseExistingDo [nobr] {"position":"1100,7850","size":"100,100"}
+<<set $qcost = setup.qc.TraitIncreaseExisting($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitRemove [nobr] {"position":"475,7850","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<devactordefault>> loses the following exact trait, if they have it:
+
+<br/>
+
+<<selecttrait 'CostTraitRemoveDo' setup.TraitHelper.getAttachableTraits()>>
+
+
+:: CostTraitRemoveDo [nobr] {"position":"600,7850","size":"100,100"}
+<<set $qcost = setup.qc.TraitRemove($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitReplace [nobr] {"position":"1225,7725","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<include CostTraitActorCommon>>
+
+<<selecttrait 'CostTraitReplaceDo' setup.TraitHelper.getAttachableTraitsInContentCreator()>>
+
+
+:: CostTraitReplaceDo [nobr] {"position":"100,7850","size":"100,100"}
+<<set $qcost = setup.qc.TraitReplace($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitReplaceExisting [nobr] {"position":"850,8100","size":"100,100"}
+<<include LoadSelectTrait>>
+
+<<devactordefault>> gains the following trait, if they ALREADY have a variation of it:
+<<message '(?)'>>
+  <div class='helpcard'>>
+    For example, if you choose large_dick, then it will give it a large dick ONLY
+    if it already have some sort of dick before.
+  </div>
+<</message>>
+<br/>
+
+<<selecttrait 'CostTraitReplaceExistingDo' setup.TraitHelper.getAllTraitsOfTags(['decreasable'])>>
+
+
+:: CostTraitReplaceExistingDo [nobr] {"position":"975,8100","size":"100,100"}
+<<set $qcost = setup.qc.TraitReplaceExisting($qgDefaultActorName, $rTrait)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraitsReplace [nobr] {"position":"1225,7850","size":"100,100"}
+<p>
+Give
+<<devactordefault>>
+<<dangertext 'all'>> of the following traits (replacing conflicting ones):
+
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.TraitsReplace($qgDefaultActorName, _chosentraits)>>
+<</link>>
+
+</p>
+
+<<set _choose_traits_attachable = true>>
+<<include 'ChooseTraits'>>
+
+
+:: CostTrauma [nobr] {"position":"475,8225","size":"100,100"}
+<<include LoadSelectTrait>>
+
+
+<<devactordefault>> gains the following temporary trait for 
+<<numberbox '_duration' 5>> weeks:
+
+<br/>
+
+<<selecttrait 'CostTraumaDo' setup.TraitHelper.getAllTraitsOfTags(['temporary'])>>
+
+
+:: CostTraumaDo [nobr] {"position":"600,8225","size":"100,100"}
+<<set $qcost = setup.qc.Trauma($qgDefaultActorName, $rTrait, _duration)>>
+<<gotowipehistory 'QGCostDone'>>
+
+
+:: CostTraumaHeal [nobr] {"position":"975,8225","size":"100,100"}
+<<devactordefault>> heals
+<<numberbox '_duration' 5>> weeks worth of trauma.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.TraumaHeal($qgDefaultActorName, _duration)>>
+<</link>>
+
+
+:: CostTraumatizeRandom [nobr] {"position":"725,8225","size":"100,100"}
+<<devactordefault>> gains a random temporary trauma for 
+<<numberbox '_duration' 5>> weeks.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.TraumatizeRandom($qgDefaultActorName, _duration)>>
+<</link>>
+
+
+:: CostTwin [nobr] {"position":"1225,6975","size":"100,100"}
+<p>
+<<devactordefault>> becomes twins with
+<<devactor '$qgDefaultActorName2'>>
+</p>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.Twin($qgDefaultActorName, $qgDefaultActorName2)>>
+<</link>>
+
+
+:: CostUnscheduleEvent [nobr] {"position":"975,5975","size":"100,100"}
+If the following event was scheduled, unschedule it.
+<br/>
+
+<<for _ievent, _event range setup.event>>
+  <<capture _event>>
+    <<link _event.getName() 'QGCostDone'>>
+      <<set $qcost = setup.qc.UnscheduleEvent(_event, _weeks)>>
+    <</link>>
+    <br/>
+  <</capture>>
+<</for>>
+
+
+:: CostVarAdd [nobr] {"position":"475,8350","size":"100,100"}
+Add into variable <<textbox '_key' ''>> a value of <<numberbox '_value' ''>>
+and resets expiration to <<numberbox '_expires' -1>> weeks.
+<<message '(?)'>>
+If the value did not exist before, it becomes 0.
+If expiration is 0 or negative, then will never expires.
+<</message>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.VarAdd(_key, _value, _expires)>>
+<</link>>
+
+
+:: CostVarRemove [nobr] {"position":"350,8350","size":"100,100"}
+Unsets the value of the variable <<textbox '_key' ''>>.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.VarRemove(_key)>>
+<</link>>
+
+
+:: CostVarSet [nobr] {"position":"225,8350","size":"100,100"}
+Set the value of variable <<textbox '_key' ''>> to <<textbox '_value' ''>>
+for <<numberbox '_expires' -1>> weeks.
+<<message '(?)'>>
+If expiration is 0 or negative, then will never expires.
+<</message>>
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.VarSet(_key, _value, _expires)>>
+<</link>>
+
+
+:: CostWasHelpText [nobr] {"position":"1100,7475","size":"100,100"}
+(The "a|was" syntax will automatically be converted in game to either was or were, depending
+on the subject. E.g., "a|was here" becomes either "you were here" or "Bob was here".
+A similar syntax exists for is/are: "a|is".)
+
+
+:: CostlevelUp [nobr] {"position":"600,7225","size":"100,100"}
+Unit <<devactordefault>> gains a level.
+
+<br/>
+<<link 'Done' 'QGCostDone'>>
+  <<set $qcost = setup.qc.levelUp($qgDefaultActorName)>>
+<</link>>
