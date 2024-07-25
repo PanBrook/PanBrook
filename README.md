@@ -8,3 +8,4 @@ I'm interested in game development and full-stack web development. I first start
  - Html (4/10) <br>
  - CSS (3/10) <br>
  - Python (2/10) <br>
+ - Javascript (2/10) <br>
